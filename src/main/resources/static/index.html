@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ToDo List Management</title>
+  <!-- Можно добавить стили здесь или подключить CSS -->
+</head>
+<body>
+  <h1>Управление задачами</h1>
+
+  <!-- Форма для добавления новой задачи -->
+  <form id="task-form">
+    <input type="text" id="task-title" placeholder="Название задачи" required>
+    <input type="text" id="task-description" placeholder="Описание задачи">
+    <button type="submit">Добавить задачу</button>
+  </form>
+
+  <!-- Список задач -->
+  <ul id="task-list"></ul>
+
+  <!-- Подключаем скомпилированный скрипт -->
+  <script src="js/app.js"></script>
+</body>
+</html>

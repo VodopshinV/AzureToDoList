@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "none",
+      "outDir": "src/main/resources/static/js", 
+      "strict": true,
+      "sourceMap": true
+    },
+    "include": [
+      "src/ts/**/*.ts"
+    ]
+  }
+  

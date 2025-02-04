@@ -1,0 +1,24 @@
+{
+  "name": "todolist",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VodopshinV/AzureToDoList.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VodopshinV/AzureToDoList/issues"
+  },
+  "homepage": "https://github.com/VodopshinV/AzureToDoList#readme",
+  "description": "",
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
