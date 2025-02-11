@@ -6,13 +6,21 @@
   <!-- Можно добавить стили здесь или подключить CSS -->
 </head>
 <body>
-  <h1>Управление задачами</h1>
+  <h1>Todo List</h1>
 
   <!-- Форма для добавления новой задачи -->
   <form id="task-form">
-    <input type="text" id="task-title" placeholder="Название задачи" required>
-    <input type="text" id="task-description" placeholder="Описание задачи">
-    <button type="submit">Добавить задачу</button>
+    <input type="text" id="task-title" placeholder="Name" required>
+    <input type="text" id="task-description" placeholder="Description">
+
+    <label for="task-priority">Priority:</label>
+    <select id="task-priority">
+      <option value="Low">Low</option>
+      <option value="Medium" selected>Medium</option>
+      <option value="High">High</option>
+    </select>
+
+    <button type="submit">Add task</button>
   </form>
 
   <!-- Список задач -->
@@ -20,5 +28,7 @@
 
   <!-- Подключаем скомпилированный скрипт -->
   <script src="js/app.js"></script>
+  
+  <link rel="stylesheet" href="css/styles.css">
 </body>
 </html>
