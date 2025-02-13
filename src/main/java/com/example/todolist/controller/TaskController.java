@@ -60,6 +60,7 @@ public class TaskController{
         Task task = optionalTask.get();
         task.SetTitle(taskDetails.getTitle());
         task.setDescription(taskDetails.getDescription());
+        task.setPriority(taskDetails.getPriority());
         task.setCompleted(taskDetails.isCompleted());
         Task updateTask = taskRepository.save(task);
         return ResponseEntity.ok(updateTask);

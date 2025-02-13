@@ -3,4 +3,67 @@
     align-items: center;
     gap: 10px; /* промежуток между элементами */
     margin-bottom: 5px; /* отступ между тасками */
-  }  
+  }
+  
+  .custom-checkbox .checkmark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #555;
+    vertical-align: middle;
+    margin-right: 8px;
+    position: relative;
+  }
+  .custom-checkbox input:checked + .checkmark::after {
+    content: "✓";
+    font-size: 16px;
+    position: absolute;
+    top: -2px;
+    left: 3px;
+    color: green;
+  }
+
+  @keyframes fall {
+    from {
+      transform: translateY(-50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .fall-animation {
+    animation: fall 0.5s ease-out;
+  }
+  
+  @keyframes rise {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .rise-animation {
+    animation: rise 0.5s ease-out;
+  }
+
+  .priority-low {
+    background-color: #d4edda; /* light-green */
+    color: #155724;
+  }
+  
+  .priority-medium {
+    background-color: #fff3cd; /* light-yellow */
+    color: #856404;
+  }
+  
+  .priority-high {
+    background-color: #f8d7da; /* light-red */
+    color: #721c24;
+  }

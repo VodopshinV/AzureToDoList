@@ -12,10 +12,13 @@ const API_URL = '/api/tasks';
 const taskForm = document.getElementById('task-form') as HTMLFormElement;
 const taskTitleInput = document.getElementById('task-title') as HTMLInputElement;
 const taskDescriptionInput = document.getElementById('task-description') as HTMLInputElement;
-const taskList = document.getElementById('task-list') as HTMLUListElement;
 const taskPrioritySelect = document.getElementById('task-priority') as HTMLSelectElement;
+const activeTaskList = document.getElementById('active-task-list') as HTMLUListElement;
+const completedTaskList = document.getElementById('completed-task-list') as HTMLUListElement;
 
 let tasks: Task[] = [];
+let animationForTask: { [key: number]: string } = {};
+
 
 async function loadTasks() {
     try {
@@ -23,105 +26,139 @@ async function loadTasks() {
         if(!response.ok) {
             throw new Error('Error loading tasks');
         }
-        const tasks: Task[] = await response.json();
+        tasks = await response.json();
         renderTasks(tasks);
     } catch (error) {
         console.error(error);
     }
 }
 
-function renderTasks(tasks: Task[]) {
-    taskList.innerHTML = '';
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.classList.add('task-item');
+function createTaskListItem(task: Task): HTMLLIElement {
+  const li = document.createElement('li');
+  li.classList.add('task-item');
 
-        //checkbox
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.completed;
-        checkbox.addEventListener('change', () => {
-        updateTaskStatus(task.id!, checkbox.checked);
+  // create checkbox
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = task.completed;
+  checkbox.addEventListener('change', () => {
+    updateTaskStatus(task.id!, checkbox.checked);
+  });
+  li.appendChild(checkbox);
+
+  // container for task details
+  const detailsDiv = document.createElement('div');
+  detailsDiv.className = 'task-details';
+  detailsDiv.style.display = 'inline-block';
+
+  if (task.editing) {
+    // editing mode: show input fields
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.value = task.title;
+    titleInput.id = 'edit-title-' + task.id;
+    detailsDiv.appendChild(titleInput);
+
+    const descriptionInput = document.createElement('input');
+    descriptionInput.type = 'text';
+    descriptionInput.value = task.description || '';
+    descriptionInput.id = 'edit-description-' + task.id;
+    detailsDiv.appendChild(descriptionInput);
+
+    const prioritySelect = document.createElement('select');
+    prioritySelect.id = 'edit-priority-' + task.id;
+    ['Low', 'Medium', 'High'].forEach(optionVal => {
+      const option = document.createElement('option');
+      option.value = optionVal;
+      option.textContent = optionVal;
+      if (task.priority === optionVal) option.selected = true;
+      prioritySelect.appendChild(option);
     });
+    detailsDiv.appendChild(prioritySelect);
+  } else {
+    // view mode: show task details
+    const detailsSpan = document.createElement('span');
+    detailsSpan.textContent = `${task.title} - ${task.description || ''} [Priority: ${task.priority}]`;
+    detailsDiv.appendChild(detailsSpan);
+  }
+  li.appendChild(detailsDiv);
 
-    //task details container
-    const detailsDiv = document.createElement('div');
-    detailsDiv.className = 'task-details';
+  // edit button
+  const editButton = document.createElement('button');
+  editButton.innerHTML = '✏️';
+  editButton.style.opacity = task.editing ? '0.5' : '1';
+  editButton.addEventListener('click', () => {
     if (task.editing) {
-      // editing mode: show input fields
-      const titleInput = document.createElement('input');
-      titleInput.type = 'text';
-      titleInput.value = task.title;
-      titleInput.id = 'edit-title-' + task.id;
-      detailsDiv.appendChild(titleInput);
-
-      const descriptionInput = document.createElement('input');
-      descriptionInput.type = 'text';
-      descriptionInput.value = task.description || '';
-      descriptionInput.id = 'edit-description-' + task.id;
-      detailsDiv.appendChild(descriptionInput);
-
-      const prioritySelect = document.createElement('select');
-      prioritySelect.id = 'edit-priority-' + task.id;
-      ['Low', 'Medium', 'High'].forEach(optionVal => {
-        const option = document.createElement('option');
-        option.value = optionVal;
-        option.textContent = optionVal;
-        if (task.priority === optionVal) option.selected = true;
-        prioritySelect.appendChild(option);
-      });
-      detailsDiv.appendChild(prioritySelect);
+      // save changes
+      const titleInput = document.getElementById('edit-title-' + task.id) as HTMLInputElement;
+      const descriptionInput = document.getElementById('edit-description-' + task.id) as HTMLInputElement;
+      const prioritySelect = document.getElementById('edit-priority-' + task.id) as HTMLSelectElement;
+      const updatedTask: Task = {
+        ...task,
+        title: titleInput.value,
+        description: descriptionInput.value,
+        priority: prioritySelect.value,
+        editing: false
+      };
+      updateTask(updatedTask);
     } else {
-      // normal mode: show task details
-      const detailsSpan = document.createElement('span');
-      detailsSpan.textContent = `${task.title} - ${task.description || ''} [Приоритет: ${task.priority}]`;
-      detailsDiv.appendChild(detailsSpan);
+      // edit mode
+      task.editing = true;
+      renderTasks(tasks);
     }
+  });
+  li.appendChild(editButton);
 
-    //edit button
-    const editButton = document.createElement('button');
-    editButton.innerHTML = '✏️';
-    if (task.editing) {
-      editButton.style.opacity = '0.5';
+  // delete button
+  const deleteButton = document.createElement('button');
+  deleteButton.innerHTML = '✖️';
+  deleteButton.addEventListener('click', () => {
+    deleteTask(task.id!);
+  });
+  li.appendChild(deleteButton);
+
+  switch (task.priority.toLowerCase()) {
+    case 'low':
+      detailsDiv.classList.add('priority-low');
+      break;
+    case 'medium':
+      detailsDiv.classList.add('priority-medium');
+      break;
+    case 'high':
+      detailsDiv.classList.add('priority-high');
+      break;
+    default:
+      break;
+  }
+
+  if (animationForTask[task.id!]) {
+    li.classList.add(animationForTask[task.id!]);
+    delete animationForTask[task.id!]; // delete, so that the animation is not repeated
+  }
+  
+  return li;
+}
+
+function renderTasks(tasks: Task[]) {
+  activeTaskList.innerHTML = '';
+  completedTaskList.innerHTML = '';
+
+  // filter tasks
+  const activeTasks = tasks.filter(task => !task.completed);
+  const completedTasks = tasks.filter(task => task.completed);
+
+  activeTasks.forEach(task => {
+    const li = createTaskListItem(task);
+    activeTaskList.appendChild(li);
+  });
+
+  completedTasks.forEach(task => {
+    const li = createTaskListItem(task);
+    // add animation class
+    if (!li.classList.contains('fall-animation') && !li.classList.contains('rise-animation')) {
+      li.classList.add('fall-animation');
     }
-    else {
-      editButton.style.opacity = '1';
-    }
-    editButton.addEventListener('click', () => {
-      if (task.editing) {
-        // save changes
-        const titleInput = document.getElementById('edit-title-' + task.id) as HTMLInputElement;
-        const descriptionInput = document.getElementById('edit-description-' + task.id) as HTMLInputElement;
-        const prioritySelect = document.getElementById('edit-priority-' + task.id) as HTMLSelectElement;
-        // update task object
-        const updatedTask = {
-          ...task,
-          title: titleInput.value,
-          description: descriptionInput.value,
-          priority: prioritySelect.value,
-          editing: false // exit editing mode
-        };
-        updateTask(updatedTask);
-      }
-      else{
-        // enter editing mode
-        task.editing = true;
-        renderTasks(tasks);
-      }
-    });
-
-    //delete button
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.addEventListener('click', () => {
-      deleteTask(task.id!);
-    });
-
-    li.appendChild(checkbox);
-    li.appendChild(detailsDiv);
-    li.appendChild(editButton);
-    li.appendChild(deleteButton);
-    taskList.appendChild(li);
+    completedTaskList.appendChild(li);
   });
 }
 
@@ -221,6 +258,7 @@ async function updateTaskStatus(id: number, completed: boolean) {
       if (!response.ok) {
         throw new Error('Error updating task status');
       }
+      animationForTask[id] = completed ? "fall-animation" : "rise-animation";
       await loadTasks();
     } catch (error) {
       console.error(error);

@@ -20,11 +20,18 @@
       <option value="High">High</option>
     </select>
 
-    <button type="submit">Add task</button>
+    <button type="submit">➕</button>
   </form>
 
   <!-- Список задач -->
-  <ul id="task-list"></ul>
+  <div id="active-tasks">
+    <h2>Active Tasks</h2>
+    <ul id="active-task-list"></ul>
+  </div>
+  <div id="completed-tasks">
+    <h2>Completed Tasks</h2>
+    <ul id="completed-task-list"></ul>
+  </div>
 
   <!-- Подключаем скомпилированный скрипт -->
   <script src="js/app.js"></script>
