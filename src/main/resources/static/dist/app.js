@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Priority_1 = require("./Priority");
-const TaskManager_1 = require("./TaskManager");
+import { Priority } from "./Priority.js";
+import { TaskManager } from "./TaskManager.js";
 const taskForm = document.getElementById('task-form');
 const taskTitleInput = document.getElementById('task-title');
 const taskDescriptionInput = document.getElementById('task-description');
@@ -11,7 +9,7 @@ const completedTaskList = document.getElementById('completed-task-list');
 const sortSelect = document.getElementById('sort-select');
 const filterSelect = document.getElementById('filter-select');
 const searchInput = document.getElementById('search-input');
-const taskManager = new TaskManager_1.TaskManager();
+const taskManager = new TaskManager();
 //render tasks
 function renderTasks(tasks) {
     activeTaskList.innerHTML = '';
@@ -46,7 +44,7 @@ function renderTasks(tasks) {
             const prioritySelect = document.createElement('select');
             prioritySelect.id = 'edit-priority-' + task.id;
             // priority options
-            [Priority_1.Priority.Low, Priority_1.Priority.Medium, Priority_1.Priority.High].forEach(optionVal => {
+            [Priority.Low, Priority.Medium, Priority.High].forEach(optionVal => {
                 const option = document.createElement('option');
                 option.value = optionVal;
                 option.textContent = optionVal;

@@ -1,9 +1,12 @@
 package com.example.todolist.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class Task {
@@ -17,6 +20,7 @@ public class Task {
     private boolean completed;
 
     private String priority; //low, medium, high
+    private LocalDateTime createdAt;
 
     public Task() {}
 
@@ -24,7 +28,15 @@ public class Task {
         this.title = title;
         this.description = description;
         this.completed = completed;
-        this.priority = priority;   
+        this.priority = priority;  
+        this.createdAt = LocalDateTime.now(); 
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 
     public Long getId(){
@@ -66,4 +78,21 @@ public class Task {
     public void setPriority(String priority){
         this.priority = priority;
     }
+
+    public LocalDateTime getCreatedAt(){
+        return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+               "id=" + id +
+               ", title='" + title + '\'' +
+               ", description='" + description + '\'' +
+               ", completed=" + completed +
+               ", priority='" + priority + '\'' +
+               ", createdAt=" + createdAt +
+               '}';
+    }
+
 }
