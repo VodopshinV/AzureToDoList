@@ -10,6 +10,11 @@ const sortSelect = document.getElementById('sort-select');
 const filterSelect = document.getElementById('filter-select');
 const searchInput = document.getElementById('search-input');
 const taskManager = new TaskManager();
+sortSelect.addEventListener('change', applySortAndFilter);
+filterSelect.addEventListener('change', applySortAndFilter);
+searchInput.addEventListener('input', () => {
+    applySortAndFilter();
+});
 //render tasks
 function renderTasks(tasks) {
     activeTaskList.innerHTML = '';

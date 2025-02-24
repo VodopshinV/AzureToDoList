@@ -14,6 +14,13 @@ const searchInput = document.getElementById('search-input') as HTMLInputElement;
 
 const taskManager = new TaskManager();
 
+sortSelect.addEventListener('change', applySortAndFilter);
+filterSelect.addEventListener('change', applySortAndFilter);
+
+searchInput.addEventListener('input', () => {
+  applySortAndFilter();
+})
+
 //render tasks
 function renderTasks(tasks: Task[]): void {
   activeTaskList.innerHTML = '';

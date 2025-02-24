@@ -1,8 +1,8 @@
 .task-item {
     display: flex;
     align-items: center;
-    gap: 10px; /* промежуток между элементами */
-    margin-bottom: 5px; /* отступ между тасками */
+    gap: 10px;
+    margin-bottom: 5px;
   }
   
   .custom-checkbox .checkmark {

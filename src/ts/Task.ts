@@ -5,7 +5,7 @@ export interface Task {
   title: string;
   description?: string;
   completed: boolean;
-  priority: Priority;  // теперь используем Priority
+  priority: Priority;
   editing?: boolean;
   createdAt: string;
 }
