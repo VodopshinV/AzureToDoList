@@ -1,6 +1,6 @@
-import { Task } from "./Task.js";
-import { Priority } from "./Priority.js";
-import { TaskManager } from "./TaskManager.js";
+import { Task } from "./Task";
+import { Priority } from "./Priority";
+import { TaskManager } from "./TaskManager";
 
 const taskForm = document.getElementById('task-form') as HTMLFormElement;
 const taskTitleInput = document.getElementById('task-title') as HTMLInputElement;

@@ -1,5 +1,5 @@
-import { Priority } from "./Priority.js";
-import { TaskManager } from "./TaskManager.js";
+import { Priority } from "./Priority";
+import { TaskManager } from "./TaskManager";
 const taskForm = document.getElementById('task-form');
 const taskTitleInput = document.getElementById('task-title');
 const taskDescriptionInput = document.getElementById('task-description');

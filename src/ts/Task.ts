@@ -1,4 +1,4 @@
-import { Priority } from "./Priority.js";
+import { Priority } from "./Priority";
 
 export interface Task {
   id?: number;

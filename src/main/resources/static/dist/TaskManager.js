@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Priority } from "./Priority.js";
+import { Priority } from "./Priority";
 export class TaskManager {
     constructor() {
         this.tasks = [];
