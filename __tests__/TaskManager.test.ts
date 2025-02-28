@@ -14,7 +14,7 @@ describe("TaskManager", () => {
 
     test("should add a new task and then retrieve it", async () => {
         const newTask: Task = {
-            title: "Test task",
+            title: "Test Task",
             completed: false,
             description: "Test Description",
             priority: Priority.Medium,
@@ -22,15 +22,15 @@ describe("TaskManager", () => {
         };
 
         fetchMock.mockResponseOnce(JSON.stringify({ ...newTask, id: 1 }));
-        fetchMock.mockResponseOnce(JSON.stringify([ { ...newTask, id: 1 } ]));
+    
+        fetchMock.mockResponseOnce(JSON.stringify([{ ...newTask, id: 1 }]));
 
         await taskManager.addTask(newTask);
-
         await taskManager.loadTasks();
         const tasks = taskManager.getTasks();
 
         expect(tasks.length).toBeGreaterThan(0);
-        const addedTask = tasks.find(task => task.title === "Test Task"); 
+        const addedTask = tasks.find(task => task.title === "Test Task");
         expect(addedTask).toBeDefined();
         expect(addedTask?.priority).toBe(Priority.Medium);
     });
@@ -57,9 +57,9 @@ describe("TaskManager", () => {
     test("should sort tasks by creation date in descending order", () => {
         //data imitation
         const tasks: Task[] = [
-            {id: 1, title: "Task 1", completed: false, priority: Priority.Low, createdAt: new Date().toISOString()},
-            {id: 2, title: "Task 2", completed: true, priority: Priority.Medium, createdAt: new Date().toISOString()},
-            {id: 3, title: "Task 3", completed: false, priority: Priority.High, createdAt: new Date().toISOString()}
+            { id: 1, title: "Task 1", completed: false, priority: Priority.Low, createdAt: "2025-02-28T15:37:38.321Z" },
+            { id: 2, title: "Task 2", completed: true, priority: Priority.Medium, createdAt: "2025-02-28T15:37:39.321Z" },
+            { id: 3, title: "Task 3", completed: false, priority: Priority.High, createdAt: "2025-02-28T15:37:40.321Z" }
         ];
 
         (taskManager as any).tasks = tasks;

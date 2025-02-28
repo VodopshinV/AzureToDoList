@@ -1,5 +1,5 @@
-import { Task } from "./Task";
-import { Priority } from "./Priority";
+import { Task } from "./Task.js";
+import { Priority } from "./Priority.js";
 
 export class TaskManager {
   private tasks: Task[] = [];
