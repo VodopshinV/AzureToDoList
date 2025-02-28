@@ -1,6 +1,8 @@
 import { Task } from "./Task.js";
 import { Priority } from "./Priority.js";
 
+import { TaskError } from "./Errors/TaskError.js";
+
 export class TaskManager {
   private tasks: Task[] = [];
   private API_URL: string = '/api/tasks';
@@ -14,9 +16,17 @@ export class TaskManager {
         try {
           const response = await fetch(this.API_URL);
           if (!response.ok) {
-            throw new Error('Error loading tasks from server');
+            throw new TaskError('Error loading tasks from server' + response.statusText);
           }
-          this.tasks = await response.json();
+          try {
+            this.tasks = await response.json();
+          } catch (jsonError: unknown) {
+            if (jsonError instanceof Error) {
+              throw new TaskError('Invalid JSON response: ' + jsonError.message);
+            } else {
+              throw new TaskError('Invalid JSON response');
+            }
+          }
           this.saveToLocalStorage();
         } catch (error) {
           console.error("Server error, loading tasks from localStorage:", error);
@@ -44,11 +54,12 @@ export class TaskManager {
             body: JSON.stringify(task)
         });
         if (!response.ok) {
-            throw new Error('Error creating task');
+            throw new TaskError('Error creating task');
         }
         await this.loadTasks();
         } catch (error) {
-        console.error(error);
+            console.error("TaskManager addTask error:", error);
+            throw error;
         }
     }
 
@@ -61,11 +72,12 @@ export class TaskManager {
             body: JSON.stringify(task)
         });
         if (!response.ok) {
-            throw new Error('Error updating task');
+            throw new TaskError('Error updating task');
         }
         await this.loadTasks();
         } catch (error) {
-        console.error(error);
+            console.error("TaskManager updateTask error:", error);
+            throw error;
         }
     }
 
@@ -79,13 +91,14 @@ export class TaskManager {
             body: JSON.stringify(updatedTask)
           });
           if (!response.ok) {
-            throw new Error('Error updating task status');
+            throw new TaskError('Error updating task status');
           }
           // save animation for task
           this.animationForTask[taskId] = completed ? "fall-animation" : "rise-animation";
           await this.loadTasks();
         } catch (error) {
-          console.error(error);
+            console.error("TaskManager updateTaskStatus error:", error);
+            throw error;
         }
       }
 
@@ -96,11 +109,12 @@ export class TaskManager {
             method: 'DELETE'
             });
             if (!response.ok) {
-            throw new Error('Error deleting task');
+            throw new TaskError('Error deleting task');
             }
             await this.loadTasks();
         } catch (error) {
-            console.error(error);
+            console.error("TaskManager deleteTask error:", error);
+            throw error;
         }
     }
 

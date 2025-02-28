@@ -67,3 +67,25 @@
     background-color: #f8d7da; /* light-red */
     color: #721c24;
   }
+
+  .notification {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: #fff;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  
+  .notification.error {
+    background-color: #dc3545; /* errors */
+  }
+  
+  .notification.success {
+    background-color: #28a745; /* success */
+  }
+  
+  .notification.fade-out {
+    opacity: 0;
+  }
+  

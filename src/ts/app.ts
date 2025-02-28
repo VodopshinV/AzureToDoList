@@ -1,6 +1,7 @@
 import { Task } from "./Task.js";
 import { Priority } from "./Priority.js";
 import { TaskManager } from "./TaskManager.js";
+import { NotificationManager } from "./NotificationManager.js";
 
 const taskForm = document.getElementById('task-form') as HTMLFormElement;
 const taskTitleInput = document.getElementById('task-title') as HTMLInputElement;
@@ -13,6 +14,7 @@ const filterSelect = document.getElementById('filter-select') as HTMLSelectEleme
 const searchInput = document.getElementById('search-input') as HTMLInputElement;
 
 const taskManager = new TaskManager();
+const notificationManager = new NotificationManager("notification-container");
 
 sortSelect.addEventListener('change', applySortAndFilter);
 filterSelect.addEventListener('change', applySortAndFilter);
@@ -196,6 +198,10 @@ taskForm.addEventListener('submit', (event) => {
   };
   taskManager.addTask(newTask as Task).then(() => {
     applySortAndFilter();
+    notificationManager.showNotification("Task added successfully", "success");
+  }).catch((err) => {
+    console.error("Error in addTask:", err);
+    notificationManager.showNotification(`Error adding task: ${err.message}`, "error");
   });
   taskForm.reset();
 });
